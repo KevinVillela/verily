@@ -22,16 +22,22 @@ def open(file: str):
 
 
 def extract_in_file(folder: str, result_file: str):
-    pdf_files = [f for f in glob.iglob(folder + '**/*.pdf', recursive=True)]
+    print(folder)
+    pdf_files = [f for f in glob.iglob(folder + '*/**/*.pdf', recursive=True)]
     if len(pdf_files) == 0:
         status_label.set("No PDF files found in that ZIP file.")
         return
     merger = PdfFileMerger()
+    invalid_files = []
     for pdf in pdf_files:
-        merger.append(pdf)
+        try:
+            merger.append(pdf)
+        except:
+            invalid_files.append(pdf)
     merger.write(result_file)
     merger.close()
-    status_label.set("Merged " + str(len(pdf_files)) + " PDFs into\n" + result_file)
+    prefix = f"{len(invalid_files)} invalid PDF(s): {','.join(invalid_files)} .\n" if len(invalid_files) > 0 else ''
+    status_label.set(prefix + "Merged " + str(len(pdf_files) - len(invalid_files)) + " PDFs into\n" + result_file)
 
     step_3_label = tk.Label(root, text="Step 3: Open and print the merged PDF: ", fg="black", wraplength=250, justify=LEFT)
     step_3_label.grid(column=0, row=4)
