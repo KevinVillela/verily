@@ -22,10 +22,9 @@ def open(file: str):
 
 
 def extract_in_file(folder: str, result_file: str):
-    files = glob.iglob(folder + '**/*.pdf', recursive=True)
-    pdf_files = [f for f in files if (os.path.isfile(f) and (f).endswith('pdf'))]
+    pdf_files = [f for f in glob.iglob(folder + '**/*.pdf', recursive=True)]
     if len(pdf_files) == 0:
-        status_label.set("No PDF files found in that directory.")
+        status_label.set("No PDF files found in that ZIP file.")
         return
     merger = PdfFileMerger()
     for pdf in pdf_files:
@@ -46,7 +45,7 @@ def merge():
     folder_selected = os.path.dirname(file_selected)
     with ZipFile(file_selected, 'r') as zipObj:
         # Extract all the contents of zip file in different directory
-        zipObj.extractall('pdfs')
+        zipObj.extractall(folder_selected + '/pdfs')
 
     result_file = folder_selected + "/merged.pdf"
     if os.path.exists(result_file):
