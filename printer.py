@@ -43,7 +43,7 @@ def extract_in_file(folder: str, result_file: str):
                 last_name = m.group(1)
                 pdf_to_name[pdf] = last_name
         except:
-            print("Unable to get text of PDF, so putting it last.")
+            print("Unable to get patient name from PDF, so putting it last.")
             pdf_to_name[pdf] = 'zzzzzz'
             # If we get an error reading the file, stuck stick it to the end of the list.
 
