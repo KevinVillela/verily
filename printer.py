@@ -6,6 +6,8 @@ from tkinter import filedialog, LEFT
 from PyPDF2 import PdfFileMerger
 import webbrowser
 from zipfile import ZipFile
+import pdftotext
+import re
 
 root = tk.Tk()
 root.title("Patient Data Walkthrough")
@@ -17,7 +19,7 @@ title.grid(row=0)
 
 status_label = tk.StringVar()
 status_label.set('')
-def open(file: str):
+def open_in_chrome(file: str):
     webbrowser.open_new(file)
 
 
@@ -28,9 +30,28 @@ def extract_in_file(folder: str, result_file: str):
         return
     merger = PdfFileMerger()
     invalid_files = []
+    status_label.set(f"Reticulating Splines... Please wait")
+    root.update()
+
+    pdf_to_name = {}
+    for idx, pdf in  enumerate(pdf_files):
+        try:
+            with open(pdf, "rb") as f:
+                pdf_obj = pdftotext.PDF(f)
+                text = "".join(pdf_obj)
+                m = re.search(r'Patient Name:(.*?),', text)
+                last_name = m.group(1)
+                pdf_to_name[pdf] = last_name
+        except:
+            print("Unable to get text of PDF, so putting it last.")
+            pdf_to_name[pdf] = 'zzzzzz'
+            # If we get an error reading the file, stuck stick it to the end of the list.
+
+    pdf_files = {k: v for k, v in sorted(pdf_to_name.items(), key=lambda item: item[1])}
+    print(f"File name to name: {pdf_to_name}\n, sorted: {pdf_files}")
     status_label.set(f"Merging {len(pdf_files)} PDFs... 0%")
     root.update()
-    for idx, pdf in enumerate(sorted(pdf_files)):
+    for idx, pdf in enumerate(pdf_files):
         try:
             merger.append(pdf)
         except:
@@ -43,22 +64,24 @@ def extract_in_file(folder: str, result_file: str):
     merger.close()
     prefix = f"{len(invalid_files)} invalid PDF(s): {','.join(invalid_files)} .\n" if len(invalid_files) > 0 else ''
     status_label.set(prefix + "Merged " + str(len(pdf_files) - len(invalid_files)) + " PDFs into\n" + result_file)
-    open(result_file)
+    open_in_chrome(result_file)
 
 def merge():
     file_selected = filedialog.askopenfilename(filetypes=[("ZIP Files", ".zip")])
     if not file_selected:
         return
     folder_selected = os.path.dirname(file_selected)
+    suffix = datetime.now().strftime('%d-%b-%Y-%H-%M-%S')
+    extracted_file = f"{folder_selected}/pdfs_{suffix}"
     with ZipFile(file_selected, 'r') as zipObj:
         # Extract all the contents of zip file in different directory
-        zipObj.extractall(folder_selected + '/pdfs')
+        zipObj.extractall(extracted_file)
 
-    result_file = f"{folder_selected}/merged_{datetime.now().strftime('%d-%b-%Y-%H-%M-%S')}.pdf"
+    result_file = f"{folder_selected}/merged_{suffix}.pdf"
     if os.path.exists(result_file):
         os.remove(result_file)
 
-    extract_in_file(folder_selected + "/pdfs", result_file)
+    extract_in_file(extracted_file, result_file)
 
 status = tk.Label(root, textvariable=status_label, fg="green", wraplength=250)
 status.grid(column=0, row=3)
