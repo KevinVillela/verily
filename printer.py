@@ -1,6 +1,6 @@
 import glob
 import os
-import subprocess
+from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog, LEFT
 from PyPDF2 import PdfFileMerger
@@ -28,12 +28,15 @@ def extract_in_file(folder: str, result_file: str):
         return
     merger = PdfFileMerger()
     invalid_files = []
-    status_label.set(f"Merging {len(pdf_files)} PDFs...")
-    for pdf in sorted(pdf_files):
+    status_label.set(f"Merging {len(pdf_files)} PDFs... 0%")
+    root.update()
+    for idx, pdf in enumerate(sorted(pdf_files)):
         try:
             merger.append(pdf)
         except:
             invalid_files.append(pdf)
+        status_label.set(f"Merging PDFs... {round(idx / len(pdf_files) * 100)}%")
+        root.update()
     merger.write(result_file)
     merger.close()
     prefix = f"{len(invalid_files)} invalid PDF(s): {','.join(invalid_files)} .\n" if len(invalid_files) > 0 else ''
@@ -49,7 +52,7 @@ def merge():
         # Extract all the contents of zip file in different directory
         zipObj.extractall(folder_selected + '/pdfs')
 
-    result_file = folder_selected + "/merged.pdf"
+    result_file = f"{folder_selected}/merged_{datetime.now().strftime('%d-%b-%Y-%H:%M:%S')}.pdf"
     if os.path.exists(result_file):
         os.remove(result_file)
 
