@@ -37,6 +37,8 @@ def extract_in_file(folder: str, result_file: str):
             invalid_files.append(pdf)
         status_label.set(f"Merging PDFs... {round(idx / len(pdf_files) * 100)}%")
         root.update()
+    status_label.set(f"Merging PDFs... Finishing")
+    root.update()
     merger.write(result_file)
     merger.close()
     prefix = f"{len(invalid_files)} invalid PDF(s): {','.join(invalid_files)} .\n" if len(invalid_files) > 0 else ''
@@ -52,7 +54,7 @@ def merge():
         # Extract all the contents of zip file in different directory
         zipObj.extractall(folder_selected + '/pdfs')
 
-    result_file = f"{folder_selected}/merged_{datetime.now().strftime('%d-%b-%Y-%H:%M:%S')}.pdf"
+    result_file = f"{folder_selected}/merged_{datetime.now().strftime('%d-%b-%Y-%H-%M-%S')}.pdf"
     if os.path.exists(result_file):
         os.remove(result_file)
 
