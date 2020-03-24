@@ -43,12 +43,11 @@ def extract_in_file(folder: str, result_file: str):
                 last_name = m.group(1)
                 pdf_to_name[pdf] = last_name
         except:
-            print("Unable to get patient name from PDF, so putting it last.")
+            print(f"Unable to get patient name from PDF {pdf}, so putting it last.")
             pdf_to_name[pdf] = 'zzzzzz'
             # If we get an error reading the file, stuck stick it to the end of the list.
 
-    pdf_files = {k: v for k, v in sorted(pdf_to_name.items(), key=lambda item: item[1])}
-    print(f"File name to name: {pdf_to_name}\n, sorted: {pdf_files}")
+    pdf_files = {k: v for k, v in sorted(pdf_to_name.items(), key=lambda item: item[1].lower())}
     status_label.set(f"Merging {len(pdf_files)} PDFs... 0%")
     root.update()
     for idx, pdf in enumerate(pdf_files):
