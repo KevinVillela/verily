@@ -88,7 +88,7 @@ def install_printer():
 status = tk.Label(root, textvariable=status_label, fg="green", wraplength=250)
 status.grid(column=0, row=4)
 
-step_1_label = tk.Label(root, text='Step 1: Install the Printer Software. If no errors pop up, it will have been installed under the name "Req Printer AutoAdded"', fg="black", wraplength=250, justify=LEFT)
+step_1_label = tk.Label(root, text='Step 1: Close all open windows and Install the Printer Software. If no errors pop up, it will have been installed under the name "Req Printer AutoAdded"', fg="black", wraplength=250, justify=LEFT)
 step_1_label.grid(column=0, row=1)
 printer_button = tk.Button(text='Install Printer', command=install_printer, bg='brown', fg='white')
 printer_button.grid(column=1, row=1)
