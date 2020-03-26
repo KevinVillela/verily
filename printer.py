@@ -83,7 +83,7 @@ def merge():
     extract_in_file(extracted_file, result_file)
 
 def install_printer():
-    os.system(r'rundll32 printui.dll,PrintUIEntry /if /b "Req Printer AutoAdded" /f    %windir%\INF\ntprint.inf /r "USB001" /m "Microsoft PCL6 Class Driver"')
+    os.system(r'rundll32 printui.dll,PrintUIEntry /if /b "Req Printer AutoAdded" /f    %windir%\INF\ntprint.inf /r "USB002" /m "Microsoft PCL6 Class Driver"')
 
 status = tk.Label(root, textvariable=status_label, fg="green", wraplength=250)
 status.grid(column=0, row=4)
