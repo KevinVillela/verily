@@ -82,20 +82,28 @@ def merge():
 
     extract_in_file(extracted_file, result_file)
 
+def install_printer():
+    os.system(r'rundll32 printui.dll,PrintUIEntry /if /b "Req Printer AutoAdded" /f    %windir%\INF\ntprint.inf /r "USB001" /m "Microsoft PCL6 Class Driver"')
+
 status = tk.Label(root, textvariable=status_label, fg="green", wraplength=250)
-status.grid(column=0, row=3)
+status.grid(column=0, row=4)
 
-step_1_label = tk.Label(root, text="Step 1: Download the ZIP file", fg="black", wraplength=250, justify=LEFT)
+step_1_label = tk.Label(root, text="Step 1: Install the Printer Software", fg="black", wraplength=250, justify=LEFT)
 step_1_label.grid(column=0, row=1)
+printer_button = tk.Button(text='Install Printer', command=install_printer, bg='brown', fg='white')
+printer_button.grid(column=1, row=1)
 
-merge_button_label = tk.Label(root, text="Step 2: Select the ZIP file of the PDFs:", fg="black", wraplength=250, justify=LEFT)
-merge_button_label.grid(column=0, row=2)
+step_2_label = tk.Label(root, text="Step 2: Download the ZIP file", fg="black", wraplength=250, justify=LEFT)
+step_2_label.grid(column=0, row=2)
+
+merge_button_label = tk.Label(root, text="Step 3: Select the ZIP file of the PDFs:", fg="black", wraplength=250, justify=LEFT)
+merge_button_label.grid(column=0, row=3)
 merge_button = tk.Button(text='Choose ZIP', command=merge, bg='brown', fg='white')
-merge_button.grid(column=1, row=2)
+merge_button.grid(column=1, row=3)
 
-step_4_label = tk.Label(root, text="Step 3: Download the CSV File", fg="black", wraplength=250, justify=LEFT)
-step_4_label.grid(column=0, row=5)
-step_5_label = tk.Label(root, text="Step 4: Install the Brady Printer software", fg="black", wraplength=250, justify=LEFT)
-step_5_label.grid(column=0, row=6)
+step_4_label = tk.Label(root, text="Step 4: Download the CSV File", fg="black", wraplength=250, justify=LEFT)
+step_4_label.grid(column=0, row=6)
+step_5_label = tk.Label(root, text="Step 5: Install the Brady Printer software", fg="black", wraplength=250, justify=LEFT)
+step_5_label.grid(column=0, row=7)
 if __name__ == '__main__':
     root.mainloop()
